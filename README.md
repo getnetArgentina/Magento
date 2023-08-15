@@ -21,7 +21,7 @@
 
 ##  Configurar el modulo de Pago
 1.  Ir a la opcion Stores/Configuration/Sales/Payment Methods
-	Ya debera aparecer como opcion de pago Getnet Argentina
+	Ya debera aparecer como opcion de pago Getnet by Santander
 2.  Ingresar las credenciales que fueron otorgadas por el asesor de Getnet.
 
 
