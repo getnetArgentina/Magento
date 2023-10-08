@@ -1,0 +1,7 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block class="GetnetArg\Payments\Block\Index" name="getnet.iframe" template="GetnetArg_Payments::iframe.phtml"  cacheable="false"/>
+        </referenceContainer>
+    </body>
+</page>

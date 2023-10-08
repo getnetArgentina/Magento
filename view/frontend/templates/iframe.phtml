@@ -1,0 +1,39 @@
+<?php
+/**
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/magento2-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/magento2-ee/blob/master/LICENSE
+ */
+
+$urlSDK = $block->getUrlSDK();
+$script = $block->getScript();
+?>
+<script src="<?= $block->escapeHtml($urlSDK) ?>"></script>
+
+<div align = "center">
+    <input id="back_btn" type="button" onclick="backtoCart()" value="<?= __('Regresar al carrito de compras') ?>" class="action primary checkout"/>
+</div>
+
+<br />
+<div id="payGetnet-section"></div>
+<script>
+    <?php echo $script; ?>
+</script>
+
+<script type="text/javascript">
+require([ 'jquery', 'jquery/ui'], function($){ 
+    $(document).ready(function($) {
+        loader.init(config);
+        const iframeSection = document.getElementById("payGetnet-section");
+        const iframeGetnet = document.querySelector('iframe[id="digital-checkout-iframe"]');
+        iframeSection.appendChild(iframeGetnet);
+    });
+});
+
+    function backtoCart() {
+        window.location.replace("<?php echo $block->escapeUrl($block->getURLreturn()) ?>");
+    }
+ </script>
+

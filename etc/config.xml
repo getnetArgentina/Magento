@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <argenmagento>
+                <active>1</active>
+                <model>GetnetArg\Payments\Model\Directpost</model>
+                <order_status>pending_payment</order_status>
+                <title>Getnet Argentina</title>
+                <payment_action>true</payment_action>
+                <create_order_before>1</create_order_before>
+            </argenmagento>
+        </payment>
+    </default>
+</config>

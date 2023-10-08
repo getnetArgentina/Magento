@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Sales\Model\Service\OrderService">
+        <plugin name="order_status_plugin" type="GetnetArg\Payments\Plugin\OrderStatusPlugin" sortOrder="10"/>
+    </type>
+    <type name="Magento\Sales\Model\Order\Email\Sender\OrderSender">
+        <plugin name="getnet_disable_email_on_processing" type="GetnetArg\Payments\Plugin\OrderSenderPlugin" sortOrder="11" disabled="false" />
+    </type>
+</config>
