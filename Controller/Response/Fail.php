@@ -155,13 +155,10 @@ class Fail extends \Magento\Framework\App\Action\Action
                     $this->checkoutSession->restoreQuote();
              }
              
-	        /////////RESTAURA EL STOCK /////////        
-	        $stock= $objectManager->create('GetnetArg\Payments\Model\RestoreStock');
-	        $bodyRequest = $stock->execute($order);
-	             
-             
+            $order->cancel();
             $order->addStatusHistoryComment(__('The user canceled the payment flow'), false);
             $order->save();
+
 
 
         } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
