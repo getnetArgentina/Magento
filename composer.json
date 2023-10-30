@@ -1,23 +1,13 @@
 {
 	"name" : "getnetarg/payments",
-	"description" : "Enables the gateway",
-	"plugin-version" : "1.0.8",
-	"shop-system-name" : "Magento",
+	"description" : "Getnet Payment module",
+	"type": "magento2-module",
+	"version" : "1.0.8",
 	"plugin-name" : "GetnetArg-Magento-Plugin",
 	"require" : {
 		"php" : ">=7.3",
-		"ext-json" : "*",
-		"magento/module-sales" : ">=100.0",
-		"magento/module-store" : ">=100.0",
-		"magento/module-quote" : ">=100.0",
-		"magento/module-checkout" : ">=100.0",
-		"magento/module-backend" : ">=100.0",
-		"magento/module-payment" : ">=100.0",
-		"magento/module-catalog" : ">=100.0",
-		"magento/framework" : ">=100.0"
+		"ext-json" : "*"
 	},
-	"type" : "gateway",
-	"version" : "1.0.8",
 	"license": [
     		"GPL-3.0-only"
 	],
