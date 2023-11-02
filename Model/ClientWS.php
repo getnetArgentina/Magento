@@ -81,10 +81,12 @@ class ClientWS extends \Magento\Framework\View\Element\Template
             
 //            $this->logger->debug($response);
             
-            $responseJson=json_decode($response , true);
-            $accessToken = $responseJson['access_token'];
-            
-//            $this->logger->debug($accessToken);
+            if(str_contains($response, 'access_token')){
+                $responseJson=json_decode($response , true);
+                $accessToken = $responseJson['access_token'];
+            } else {
+                $accessToken = 'invalido';
+            }
             
         } catch (\Magento\Framework\Exception\Exception $e) {
              throw new \Magento\Framework\Exception\LocalizedException(

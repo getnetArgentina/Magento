@@ -103,6 +103,15 @@ class Index extends Template
             $this->logger->debug('ID Cliente --> ' .$email);
 
 
+        if($token == 'invalido'){
+            //enable cartItems
+            $configHelper = $objectManager->create('GetnetArg\Payments\Model\Cart');
+            $configHelper->getCartItems($email);
+            $script = 'alert("No se pudo generar la intención de pago, por favor intente de nuevo. Si el problema persiste, contacte con un ejecutivo Getnet.");
+                            window.history.go(-2);';
+            return $script;
+        }
+
 
         /////////GET BODY /////////        
         $orderHelper = $objectManager->create('GetnetArg\Payments\Model\OrderHelper');
