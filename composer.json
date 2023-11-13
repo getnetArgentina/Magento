@@ -2,7 +2,7 @@
 	"name" : "getnetarg/payments",
 	"description" : "Getnet Payment module",
 	"type": "magento2-module",
-	"version" : "1.0.9",
+	"version" : "1.1.0",
 	"plugin-name" : "GetnetArg-Magento-Plugin",
 	"require" : {
 		"php" : ">=7.3",

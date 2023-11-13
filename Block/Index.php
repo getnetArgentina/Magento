@@ -103,6 +103,18 @@ class Index extends Template
             $this->logger->debug('ID Cliente --> ' .$email);
 
 
+        $status = $this->getOrderStatus($email);
+
+        if($status == 'processing'){
+                $baseURL = $this->urlBuilder->getBaseUrl();
+                $urlSuccess = $baseURL . 'checkout/onepage/success';
+            
+                $script = 'window.location.replace("'.$urlSuccess.'");';
+               
+            return $script;
+        }
+
+
         if($token == 'invalido'){
             //enable cartItems
             $configHelper = $objectManager->create('GetnetArg\Payments\Model\Cart');
@@ -146,19 +158,17 @@ class Index extends Template
                                "accessToken": "Bearer '.$token.'"
                             };';
         }
-        
-        
+                
 //        $this->logger->debug($script);
         
         return $script;
     }
-    
-    
-    
+
+
     /*
      * *
      */
-        public function getURLreturn()
+    public function getURLreturn()
     {
         $baseURL = $this->urlBuilder->getBaseUrl();
             $this->logger->debug($baseURL);
@@ -169,4 +179,23 @@ class Index extends Template
     }    
     
     
+
+
+
+    /*
+     * *
+     */
+    public function getOrderStatus($email)
+    {
+        $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
+              
+        $orderDatamodel = $objectManager->get('Magento\Sales\Model\Order')->getCollection();
+        $orderDatamodel = $orderDatamodel->addFieldToFilter('customer_email', ['eq' => $email])->getLastItem();
+         
+        $order = $objectManager->create('\Magento\Sales\Model\Order')->load($orderDatamodel->getId());
+
+        $status = $order->getStatus();
+
+        return $status;
+    }   
 }
