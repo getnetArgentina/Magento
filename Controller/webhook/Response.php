@@ -183,22 +183,24 @@ class Response extends \Magento\Framework\App\Action\Action implements CsrfAware
             
             $this->logger->debug($amount);
             $this->logger->debug($currency);
-            $this->logger->debug($status);
+            $this->logger->info('Status response: ' . $status);
             
             $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
             $user =    $this->scopeConfig->getValue(self::USER_NOTIF, $storeScope);
             $pasw =    $this->scopeConfig->getValue(self::PASW_NOTIF, $storeScope);
                         
             $basicOrigen = 'Basic ' .base64_encode($user . ':' . $pasw);
-//            $this->logger->debug('credentials plugin -->  '.$basicOrigen);
+//            $this->logger->info('credentials plugin -->  '.$basicOrigen);
             
             $originHeader = $this->getRequest()->getHeader('Authorization');
+//            $this->logger->info('credentials webhook Getnet -->  '.$originHeader);
             
             $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
             $orderDatamodel = $objectManager->get('Magento\Sales\Model\Order')->getCollection();
             $orderDatamodel = $orderDatamodel->addFieldToFilter('customer_email', ['eq' => $email])->getLastItem();
                 
             $order = $objectManager->create('\Magento\Sales\Model\Order')->load($orderDatamodel->getId());
+            $this->logger->info('OrderID --> ' .$order->getId());
             
             ///////////////////////////////////////////////////////////////////////////////
             //////////////////////// Valida autenticaciones ///////////////////////////////
@@ -230,7 +232,7 @@ class Response extends \Magento\Framework\App\Action\Action implements CsrfAware
                     $grandTotal = ($amount + $shippingAmount + $interes) / 100;
                     $baseGrandTotal = ($amount) / 100;
 
-                    $this->logger->debug('Total --> '.$order->getGrandTotal().'');
+                    $this->logger->info('Total --> '.$order->getGrandTotal().'');
                     
                     $status = $order->getState();
                     $payment = $order->getPayment();
@@ -386,14 +388,14 @@ class Response extends \Magento\Framework\App\Action\Action implements CsrfAware
                     $this->logger->info('Payment Denied');
                 }
             } else {
+                $this->logger->info('Validation Webhook - bad credentials');
                 $webMessage = 'Validation Webhook Error';
                 $order->addStatusHistoryComment($webMessage, false);
-                $order->save();
-                $this->logger->debug('Validation Webhook error');
+                $order->save();                
             }
             
         } catch (\Exception $e) {
-            $this->logger->error($e);
+            $this->logger->info($e);
         }
         
         
