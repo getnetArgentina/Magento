@@ -66,6 +66,7 @@ class ClientWS extends \Magento\Framework\View\Element\Template
                    
          }
          
+         $this->logger->debug("url --> " . $url);
 
         $data = [
             'grant_type' => 'client_credentials',
@@ -109,15 +110,16 @@ class ClientWS extends \Magento\Framework\View\Element\Template
 
         //  1 --> Test Mode activated
          if($testEnv == '1'){ 
-                   $urlIntent = 'https://api.pre.globalgetnet.com/digital-payments/checkout/v1/payment-intent';
+                   $urlIntent = 'https://api.pre.globalgetnet.com/digital-checkout/v1/payment-intent';
                    
          } else { //produccion
-                   $urlIntent = 'https://api.globalgetnet.com/digital-payments/checkout/v1/payment-intent';
+                   $urlIntent = 'https://api.globalgetnet.com/digital-checkout/v1/payment-intent';
                    
          }
          
 
         $JsonArg = str_replace("XXXXXXXXXX", $token, $bodyRequest);
+             $this->logger->debug("url --> " . $urlIntent);
              $this->logger->debug('Json Enviado --> ' . $JsonArg );
 
          try {
@@ -170,10 +172,10 @@ class ClientWS extends \Magento\Framework\View\Element\Template
 
         //  1 --> Test Mode activated
          if($testEnv == '1'){ 
-                   $url = 'https://api.pre.globalgetnet.com/checkout/v1/payments';
+                   $url = 'https://api.pre.globalgetnet.com/digital-checkout/v1/payments';
                    
          } else { //produccion
-                   $url = 'https://api.globalgetnet.com/checkout/v1/payments';
+                   $url = 'https://api.globalgetnet.com/digital-checkout/v1/payments';
                    
          }
          

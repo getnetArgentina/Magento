@@ -117,14 +117,7 @@ class Refund extends \Magento\Framework\App\Action\Action
             $pasw_post = \Magento\Framework\App\ObjectManager::getInstance()
             ->get(\Magento\Framework\App\Config\ScopeConfigInterface::class)
             ->getValue(self::PASW_PROCESS,\Magento\Store\Model\ScopeInterface::SCOPE_STORE,);
-            
-            
-            if($dateTrx == $sysdate){ //Same day cancel
-                $action = 'cancellation';
-                $statusFinal = 'canceled';
-                $jsonBody = '';
-                
-            } else { //Different day refund
+                          
                 $action = 'refund';
                 $statusFinal = 'getnet_refunded';
                 
@@ -134,7 +127,6 @@ class Refund extends \Magento\Framework\App\Action\Action
                  $jsonBody = '{
                                 "amount": '.$amount.'
                               }';
-            }
             
             
             ////////////////////  GET TOKEN    //////////////////////

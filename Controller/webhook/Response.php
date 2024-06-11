@@ -166,7 +166,8 @@ class Response extends \Magento\Framework\App\Action\Action implements CsrfAware
         $ordenItems="";
         $auth = '';
         $message = '';
-        $webMessage = '';
+        $webMessage = 'Webhook received successfully.';
+        $statusHTTP = 'success';
         $amount= '0';
        
        
@@ -201,6 +202,10 @@ class Response extends \Magento\Framework\App\Action\Action implements CsrfAware
                 
             $order = $objectManager->create('\Magento\Sales\Model\Order')->load($orderDatamodel->getId());
             $this->logger->info('OrderID --> ' .$order->getId());
+
+            //inicializamos el status HTTP
+            $response = $this->jsonResultFactory->create();
+            $response->setHttpResponseCode(200);
             
             ///////////////////////////////////////////////////////////////////////////////
             //////////////////////// Valida autenticaciones ///////////////////////////////
@@ -392,16 +397,16 @@ class Response extends \Magento\Framework\App\Action\Action implements CsrfAware
                 $webMessage = 'Validation Webhook Error';
                 $order->addStatusHistoryComment($webMessage, false);
                 $order->save();                
+                $statusHTTP = 'forbidden';
+                $response->setHttpResponseCode(403);
             }
             
         } catch (\Exception $e) {
             $this->logger->info($e);
         }
+
         
-        
-        // Responder con una confirmación
-        $response = $this->jsonResultFactory->create();
-        $response->setData(['status' => 'success', 'message' => $webMessage]);
+        $response->setData(['status' => $statusHTTP, 'message' => $webMessage]);
         return $response;
         
     }
