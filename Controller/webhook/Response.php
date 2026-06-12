@@ -73,6 +73,10 @@ class Response extends \Magento\Framework\App\Action\Action implements CsrfAware
     protected $logger;
     
     protected $jsonResultFactory;
+
+    protected $scopeConfig;
+
+    protected $order;
     
     
     public function __construct(
@@ -160,7 +164,7 @@ class Response extends \Magento\Framework\App\Action\Action implements CsrfAware
         $responseGetnet = $this->request->getContent();
         
         $this->logger->info('---------RESULTADO BODY RESPONSE. (responseGetnet) -----------');
-        $this->logger->debug($responseGetnet);
+        //$this->logger->debug($responseGetnet);
         
         $resultRedirect="";
         $ordenItems="";
@@ -191,10 +195,8 @@ class Response extends \Magento\Framework\App\Action\Action implements CsrfAware
             $pasw =    $this->scopeConfig->getValue(self::PASW_NOTIF, $storeScope);
                         
             $basicOrigen = 'Basic ' .base64_encode($user . ':' . $pasw);
-//            $this->logger->info('credentials plugin -->  '.$basicOrigen);
-            
+
             $originHeader = $this->getRequest()->getHeader('Authorization');
-//            $this->logger->info('credentials webhook Getnet -->  '.$originHeader);
             
             $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
             $orderDatamodel = $objectManager->get('Magento\Sales\Model\Order')->getCollection();
@@ -216,7 +218,10 @@ class Response extends \Magento\Framework\App\Action\Action implements CsrfAware
                 // The message was validated with the signature
                 if ($status == 'Authorized'){
                     
-                    $tokenID    = $jsondata["payment"]["payment_method"]["token_id"];
+                    $tokenID = isset($jsondata["payment"]["payment_method"])
+                                && isset($jsondata["payment"]["payment_method"]["token_id"])
+                                ? $jsondata["payment"]["payment_method"]["token_id"]
+                                : null;
                     $paymentID  = $jsondata["payment"]["result"]["payment_id"];
                     $authCode   = $jsondata["payment"]["result"]["authorization_code"];
                     

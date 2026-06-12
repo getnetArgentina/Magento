@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugin Name:       Magento GetNet
  * Plugin URI:        -
@@ -8,6 +9,7 @@
  * License URI:       https://opensource.org/licenses/AFL-3.0
  *
  */
+
 declare(strict_types=1);
 
 namespace GetnetArg\Payments\Plugin\Block\Widget\Button;
@@ -20,49 +22,47 @@ use Magento\Backend\Block\Widget\Button\Toolbar as ToolbarContext;
 class ToolbarPlugArg
 
 {
-    
+
     public function beforePushButtons(
         ToolbarContext $toolbar,
         AbstractBlock $context,
         ButtonList $buttonList
+
+    ): array {
+        $order = false;
+        $state = '';
+        $nameInLayout = $context->getNameInLayout();
         
-        ): array {
-            $order = false;
-            $state='';
-            $nameInLayout = $context->getNameInLayout();
-            try{
-                if ('sales_order_edit' == $nameInLayout) {
-                    $order = $context->getOrder();
-                    $orderID = $order->getId();
-                    $state = $order->getState();
-                    $payment = $order->getPayment();
-                    $domain = $payment->getAdditionalInformation('domain');
-                }
-                
-                if ($order) {
-                    
-                    if($state == 'processing'){
-                        $urlRefund = $domain.'webhook/refund?opCli='.base64_encode($orderID);
-                        $message = __('Are you sure you want to refund this order?');
-                        
-                        $buttonList->add(
-                            'refund_button',
-                            [
-                                'label' => __('Cancel and Refund'),
-                                'onclick' => "confirmSetLocation('{$message}', '{$urlRefund}')",
-                                'sort_order' => 3,
-                                'id' => 'refund_button'
-                                    ]
-                            );
-                        
-                    }
-                }
-                
-                
-            } catch (\Exception $e) {
-                $this->logger->debug('---error---'.$e.'-');
+        try {
+            if ('sales_order_edit' == $nameInLayout) {
+                $order = $context->getOrder();
+                $orderID = $order->getId();
+                $state = $order->getState();
+                $payment = $order->getPayment();
+                $domain = $payment->getAdditionalInformation('domain');
             }
-            
-            return [$context, $buttonList];
+
+            if ($order) {
+
+                if ($state == 'processing' || $state == 'complete' || $state == 'dispatched' || $state == 'completed' || $state == 'despachado') {
+                    $urlRefund = $domain . 'webhook/refund?opCli=' . base64_encode($orderID);
+                    $message = __('Are you sure you want to refund this order?');
+
+                    $buttonList->add(
+                        'refund_button',
+                        [
+                            'label' => __('Cancel and Refund'),
+                            'onclick' => "confirmSetLocation('{$message}', '{$urlRefund}')",
+                            'sort_order' => 3,
+                            'id' => 'refund_button'
+                        ]
+                    );
+                }
+            }
+        } catch (\Exception $e) {
+            $this->logger->debug('---error---' . $e . '-');
+        }
+
+        return [$context, $buttonList];
     }
 }

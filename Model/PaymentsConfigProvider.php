@@ -44,17 +44,7 @@ class PaymentsConfigProvider implements ConfigProviderInterface
     {
         $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
 
-        $config = [
-        'payment' => [
-        'argenmagento' => [
-            'secret_id' => $this->scopeConfig->getValue(self::SECRET_ID, $storeScope),
-            'client_id' => $this->scopeConfig->getValue(self::CLIENT_ID, $storeScope),
-            'user_notif' => $this->scopeConfig->getValue(self::USER_NOTIF, $storeScope),
-            'pasw_notif' => $this->scopeConfig->getValue(self::PASS_NOTIF, $storeScope),
-            'test_environment' => $this->scopeConfig->getValue(self::TEST_PAYMENT, $storeScope)
-                        ]
-                    ]
-                ];
+        $config = [];
 
         return $config;
     }

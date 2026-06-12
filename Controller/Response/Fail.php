@@ -23,6 +23,8 @@ class Fail extends \Magento\Framework\App\Action\Action
 {
     
     protected $_request;
+
+    protected $_objectManager;
     
     protected $logger;
     

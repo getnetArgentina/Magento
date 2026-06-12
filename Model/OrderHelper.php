@@ -210,6 +210,7 @@ class OrderHelper extends \Magento\Framework\View\Element\Template
         
             $jsonBody = '{
                     "mode": "instant",
+                    "order_id": "'.$quoteId.'",
                     "payment": {
                         "amount": '.$amountBeforeShip.',
                         "currency": "'.$currency.'"

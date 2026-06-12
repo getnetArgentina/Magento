@@ -51,9 +51,6 @@ class ClientWS extends \Magento\Framework\View\Element\Template
     {
         $accessToken ='';
         
-        $this->logger->debug('----------------------------------------------');
-        $this->logger->debug($ClientID);
-        
         ////////////////////////////////////////////////////////
         ///////////////// GET Token/////////////////////////////
         
@@ -120,7 +117,7 @@ class ClientWS extends \Magento\Framework\View\Element\Template
 
         $JsonArg = str_replace("XXXXXXXXXX", $token, $bodyRequest);
              $this->logger->debug("url --> " . $urlIntent);
-             $this->logger->debug('Json Enviado --> ' . $JsonArg );
+             //$this->logger->debug('Json Enviado --> ' . $JsonArg );
 
          try {
             $this->_curl->addHeader("Content-Type", "application/json");
@@ -130,7 +127,7 @@ class ClientWS extends \Magento\Framework\View\Element\Template
             $response = $this->_curl->getBody();
         
                 $this->logger->info('<-------------Response service payment GETNET-----------> ');
-                $this->logger->info('payment Intent--> ' . $response );
+                //$this->logger->info('payment Intent--> ' . $response );
 
 
             if(str_contains($response, 'payment_intent_id')){
@@ -145,8 +142,7 @@ class ClientWS extends \Magento\Framework\View\Element\Template
 
       
         } catch (\Magento\Framework\Exception\Exception $e) {
-                $this->logger->info($e);
-                $this->logger->info($e);
+                $this->logger->error($e);
                 $this->messageManager->addError(__('Error al crear la intención de pago'));
         }
         
@@ -182,7 +178,7 @@ class ClientWS extends \Magento\Framework\View\Element\Template
          $url = $url .'/'. $paymentID .'/'. $action;
 
         $this->logger->debug('url --> ' . $url);
-        $this->logger->debug('body --> ' . $jsonBody);
+        //$this->logger->debug('body --> ' . $jsonBody);
 
 
         try {
@@ -192,7 +188,7 @@ class ClientWS extends \Magento\Framework\View\Element\Template
             $this->_curl->post($url, $jsonBody);
             $response = $this->_curl->getBody();
         
-                $this->logger->debug('Response service Post Operation--> ' . $response);
+            //$this->logger->debug('Response service Post Operation--> ' . $response);
 
         } catch (\Magento\Framework\Exception\Exception $e) {
                 $this->logger->debug($e);

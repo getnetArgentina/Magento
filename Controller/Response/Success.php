@@ -28,6 +28,8 @@ class Success extends \Magento\Framework\App\Action\Action
     protected $logger;
     
     protected $checkoutSession;
+
+    protected $cart;
     
     /**
      * 

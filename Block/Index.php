@@ -70,101 +70,19 @@ class Index extends Template
         
         return $url;
     }
-    
 
-    
     /**
      * @return string
      */
-    public function getScript()
+    public function getConfigUrl()
     {
-        $this->logger->debug('------------------Init Script-------------------');
-        
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        
-        $clienId = \Magento\Framework\App\ObjectManager::getInstance()
-                ->get(\Magento\Framework\App\Config\ScopeConfigInterface::class)
-                ->getValue(self::CLIENT_ID,\Magento\Store\Model\ScopeInterface::SCOPE_STORE,);
-
-        $secret = \Magento\Framework\App\ObjectManager::getInstance()
-                ->get(\Magento\Framework\App\Config\ScopeConfigInterface::class)
-                ->getValue(self::SECRET_ID,\Magento\Store\Model\ScopeInterface::SCOPE_STORE,);
-
-        $testEnv = \Magento\Framework\App\ObjectManager::getInstance()
-        ->get(\Magento\Framework\App\Config\ScopeConfigInterface::class)
-        ->getValue(self::TEST_ENV,\Magento\Store\Model\ScopeInterface::SCOPE_STORE,);
-
-        /////////GET TOKEN /////////                
-        $configHelper = $objectManager->create('GetnetArg\Payments\Model\ClientWS');
-        $token = $configHelper->getToken($clienId, $secret, $testEnv);
-        
-        $Client_id = $this->request->getParam('prx');
-        $email = base64_decode($Client_id);
-            $this->logger->debug('ID Cliente --> ' .$email);
-
-
-        $status = $this->getOrderStatus($email);
-
-        if($status == 'processing'){
-                $baseURL = $this->urlBuilder->getBaseUrl();
-                $urlSuccess = $baseURL . 'checkout/onepage/success';
-            
-                $script = 'window.location.replace("'.$urlSuccess.'");';
-               
-            return $script;
-        }
-
-
-        if($token == 'invalido'){
-            //enable cartItems
-            $configHelper = $objectManager->create('GetnetArg\Payments\Model\Cart');
-            $configHelper->getCartItems($email);
-            $script = 'alert("No se pudo generar la intención de pago, por favor intente de nuevo. Si el problema persiste, contacte con un ejecutivo Getnet.");
-                            window.history.go(-2);';
-            return $script;
-        }
-
-
-        /////////GET BODY /////////        
-        $orderHelper = $objectManager->create('GetnetArg\Payments\Model\OrderHelper');
-        $bodyRequest = $orderHelper->getBodyOrderRequest($email);
-
-        
-        
-        
-        /////////GET PAYMENT INTENT ID /////////
-        $payIntentId = $configHelper->getPaymentIntentID($token, $bodyRequest, $testEnv);
-        
-         $this->logger->debug('$payIntentId --> ' .$payIntentId);
-        
-        if($payIntentId == 'error') {
-            //enable cartItems
-            $configHelper = $objectManager->create('GetnetArg\Payments\Model\Cart');
-            $configHelper->getCartItems($email);
-            $script = 'alert("Error al generar la intención de pago");
-                        window.history.go(-2);';
-
-        } else if($payIntentId == 'currency_error') {
-            //enable cartItems
-            $configHelper = $objectManager->create('GetnetArg\Payments\Model\Cart');
-            $configHelper->getCartItems($email);
-            $script = 'alert("Tipo de moneda no soportada");
-                            window.history.go(-2);';
-            
-        }  else {
-            $script = 'const config = {
-                          "paymentIntentId": "'.$payIntentId.'",
-                          "checkoutType": "iframe",
-                               "accessToken": "Bearer '.$token.'"
-                            };';
-        }
-                
-//        $this->logger->debug($script);
-        
-        return $script;
+        return $this->urlBuilder->getUrl(
+            'argenmagento/iframe/config',
+            ['_secure' => true, '_query' => ['prx' => $this->request->getParam('prx')]]
+        );
     }
 
-
+    
     /*
      * *
      */
@@ -176,26 +94,5 @@ class Index extends Template
         $UrlCart = $baseURL . 'argenmagento/response/cart';    
 
         return $UrlCart;
-    }    
-    
-    
-
-
-
-    /*
-     * *
-     */
-    public function getOrderStatus($email)
-    {
-        $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
-              
-        $orderDatamodel = $objectManager->get('Magento\Sales\Model\Order')->getCollection();
-        $orderDatamodel = $orderDatamodel->addFieldToFilter('customer_email', ['eq' => $email])->getLastItem();
-         
-        $order = $objectManager->create('\Magento\Sales\Model\Order')->load($orderDatamodel->getId());
-
-        $status = $order->getStatus();
-
-        return $status;
-    }   
+    }
 }
